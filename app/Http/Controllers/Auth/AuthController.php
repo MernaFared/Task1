@@ -38,7 +38,7 @@ class AuthController extends Controller
      $role = ModelsRole::where('name', 'User')->first(); // Assuming 'user' is the role name
      $user->assignRole($role);
 
-        return response()->json([ 'user' => $user, 'token' => $token],201);
+        return response()->json([ 'user' => $user, 'token' => $token],200);
 
      }
 
