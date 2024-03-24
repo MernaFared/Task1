@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,14 +30,21 @@ Route::post('login', [AuthController::class, 'login']);
 //Route::get('roles', [RoleController::class, 'index']);
 
 Route::middleware('auth:api')->group(function () {
-    
+
     Route::get('/roles', [RoleController::class, 'index']);
     Route::post('/roles', [RoleController::class, 'store']);
     Route::get('/roles/{id}', [RoleController::class, 'show']);
     Route::put('/roles/{id}', [RoleController::class, 'update']);
     Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+
+    Route::get('/users', [UserController::class,'index']);
+    Route::post('/users', [UserController::class,'store']);
+    Route::get('/users/{id}', [UserController::class,'show']);
+    Route::put('/users/{id}', [UserController::class,'update']);
+    Route::delete('/users/{id}', [UserController::class,'destroy']);
+
 });
- 
+
 
 // Route::post('/register', 'AuthController@register');
 

@@ -25,7 +25,8 @@ class AuthController extends Controller
 
         $user = User::create([
             'username' => $request->username,
-            'name' => $request->username,
+            // 'name' => $request->username,
+            'role' => 'user',
             'fullname' => $request->fullname,
             'password' => Hash::make($request->password),
             'email'=> $request->username  . "@gmail.com",
@@ -35,16 +36,18 @@ class AuthController extends Controller
         $token = $user->createToken('TASK1')->accessToken;
 
      // Assign a role to the user
-     $role = ModelsRole::where('name', 'User')->first(); // Assuming 'user' is the role name
-     $user->assignRole($role);
+    //  $role = ModelsRole::where('name', 'User')->first(); // Assuming 'user' is the role name
+    //  $user->assignRole($role);
+    // $role = Role::where('name', 'user')->first();
+    // $user->assignRole($role);
 
         return response()->json([ 'user' => $user, 'token' => $token],200);
 
      }
 
     public function login(Request $request)
-    
-    { 
+
+    {
         $data = $request->validate([
             'username' => 'required',
             'password' => 'required'
@@ -53,8 +56,8 @@ class AuthController extends Controller
         if (!Auth::attempt($data)) {
             return response()->json(['error_message' => 'Incorrect credentials. Please try again'], 401);
         }
-    
-    
+
+
 
         $user = User::find(Auth::user()->id);
 
