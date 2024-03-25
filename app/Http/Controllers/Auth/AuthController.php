@@ -32,14 +32,12 @@ class AuthController extends Controller
             'email'=> $request->username  . "@gmail.com",
             //'email'=> $request->email
          ]);
+         activity('User Register')
+         ->causedBy(auth()->user())
+         ->log('User signUp: ' . $user->username);
 
         $token = $user->createToken('TASK1')->accessToken;
 
-     // Assign a role to the user
-    //  $role = ModelsRole::where('name', 'User')->first(); // Assuming 'user' is the role name
-    //  $user->assignRole($role);
-    // $role = Role::where('name', 'user')->first();
-    // $user->assignRole($role);
 
         return response()->json([ 'user' => $user, 'token' => $token],200);
 
@@ -61,8 +59,12 @@ class AuthController extends Controller
 
         $user = User::find(Auth::user()->id);
 
-        $token = $user->createToken('TASK1')->accessToken;
 
+        $token = $user->createToken('TASK1')->accessToken;
+        
+        activity('User Login')
+        ->causedBy(auth()->user())
+        ->log('User Signin: ' . $user->username);
         return response(['user' => $user, 'token' => $token]);
 
     }

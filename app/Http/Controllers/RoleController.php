@@ -32,11 +32,11 @@ class RoleController extends Controller
         $role = Role::create(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
 
-        activity()
+        activity('Add Role')
         ->causedBy(auth()->user())
         ->performedOn($role)
         ->log('Role created: ' . $role->name);
-        $lastActivity = Activity::all()->last(); //returns the last logged activity
+        $lastActivity = Activity::all()->last();
 
         $lastActivity->subject;
         $subject = $lastActivity ? $lastActivity->subject : null;
@@ -73,7 +73,7 @@ class RoleController extends Controller
 
         $updatedRole = Role::findOrFail($id);
 
-        activity()
+        activity('Edit Role')
         ->causedBy(auth()->user())
         ->performedOn($role)
         ->log('Role updated: ' . $role->name);
@@ -94,7 +94,8 @@ class RoleController extends Controller
         }
 
         $role->delete();
-            activity()
+
+            activity('Delete Role')
             ->causedBy(auth()->user())
             ->performedOn($role)
             ->log('Role deleted: ' . $role->name);

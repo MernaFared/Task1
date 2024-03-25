@@ -34,13 +34,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'username' => 'required|string|unique:users',
             'fullname' => 'required|string',
             'password' => 'required|string|min:8',
             'roles' => 'required|array',
-            'roles.*' => 'exists:roles,name'
+            'roles.*' => 'exists:roles,name',
+            'status' => 'string|in:active,inactive'
         ]);
         $rolesAsString = implode(',', $request->roles);
 
@@ -50,18 +50,16 @@ class UserController extends Controller
             'role' => $rolesAsString,
             'password' => Hash::make($request->password),
             'email'=> $request->username  . "@gmail.com",
-
+            'status' => $request->status ?? 'inactive'
         ]);
-        // $status = $user->isActive() ? 'active' : 'inactive';
-        $user->assignRole($request->roles);
-
-        activity()
+         $user->assignRole($request->roles);
+        activity('Add User')
             ->causedBy(auth()->user())
             ->log('User created: ' . $user->username);
 
         return response()->json(['message' => 'User created successfully',
-        // 'status' => $status
-          ], 201);
+        'user' => $user,
+           ], 201);
     }
 
     /**
@@ -93,24 +91,26 @@ class UserController extends Controller
             'fullname' => 'required',
             'password' => 'required|min:6',
             'roles' => 'required|array',
+            'status' => 'string|in:active,inactive',
         ]);
 
         $user->update([
             'username' => $request->username,
             'fullname' => $request->fullname,
             'password' => bcrypt($request->password),
+            'status' => $request->status ?? $user->status,
         ]);
 
         // $status = $user->isActive() ? 'active' : 'inactive';
         $user->syncRoles($request->roles);
-        activity()
+
+        activity('Edit User')
             ->causedBy(auth()->user())
             ->log('User updated: ' . $user->username);
 
         return response()->json(['message' => 'User updated successfully',
         'user' => $user,
-        // 'status' => $status
-                ], 200);
+                 ], 200);
     }
 
     /**
@@ -125,7 +125,8 @@ class UserController extends Controller
         }
 
         $user->delete();
-        activity()
+
+        activity('Delete User')
         ->causedBy(auth()->user())
         ->log('User deleted: ' . $user->username);
         return response()->json(['message'=>'User with id '.$id. ' deleteed succefully'], 200);
