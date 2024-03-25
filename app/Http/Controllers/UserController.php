@@ -18,6 +18,10 @@ class UserController extends Controller
     {
         $users = User::all();
 
+        activity('show all Users')
+        ->causedBy(auth()->user())
+        ->log('view users');
+
         return response()->json(['users' => $users]);
     }
 
@@ -65,9 +69,14 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showSingleUser(string $id)
     {
         $user = User::findOrFail($id);
+
+        activity('show Single User')
+        ->causedBy(auth()->user())
+        ->log('view user: '.$user->username);
+
         return response()->json(['user' => $user], 200);
     }
 
