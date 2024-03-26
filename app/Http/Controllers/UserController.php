@@ -38,6 +38,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
+        // If no default status is found, use a fallback value
+
         $request->validate([
             'username' => 'required|string|unique:users',
             'fullname' => 'required|string',
@@ -55,6 +58,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'email'=> $request->username  . "@gmail.com",
             'status' => $request->status ?? 'inactive'
+            // 'status' => $defaultStatus
         ]);
          $user->assignRole($request->roles);
         activity('Add User')

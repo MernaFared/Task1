@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
@@ -15,7 +16,10 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-
+        $defaultStatus = Settings::where('key', 'users_register_default_status')->value('value');
+        if (!$defaultStatus) {
+            $defaultStatus = 'inactive';  
+        }
         $request->validate([
             'username' => 'required|unique:users',
             'fullname' => 'required',
@@ -61,7 +65,7 @@ class AuthController extends Controller
 
 
         $token = $user->createToken('TASK1')->accessToken;
-        
+
         activity('User Login')
         ->causedBy(auth()->user())
         ->log('User Signin: ' . $user->username);
