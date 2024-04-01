@@ -181,7 +181,9 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
+        //Barryvdh\DomPDF\ServiceProvider::class,
+        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+        // Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -213,9 +215,10 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
 
 
-        'PDF' => Barryvdh\DomPDF\Facade::class,
-
-
+        //  'PDF' => Barryvdh\DomPDF\Facade::class,
+        // 'PDF' => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class,
+        // 'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+      'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
     ])->toArray(),
 
 ];

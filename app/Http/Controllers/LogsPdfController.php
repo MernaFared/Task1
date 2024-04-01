@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\ActivityLog;
-use Dompdf\Dompdf;
+// use niklasravnsborg\LaravelPdf\Facades\Pdf;
 use Spatie\Activitylog\Models\Activity;
-
+use  PDF;
 class LogsPdfController extends Controller
 {
     /**
@@ -19,11 +19,13 @@ class LogsPdfController extends Controller
 
     $logs = Activity::all();
 
-     $pdf = PDF::loadView('pdf.logs', ['logs' => $logs]);
+    $pdf = PDF::loadView('pdf.reports', compact('logs'), [], [
+        'format' => 'A4'
+    ]);
 
-     return $pdf->download('Activity_logs.pdf');
+    $pdf->save( storage_path('app/public/' .'log_type' . time().'.pdf' ));
 
-
+    //  return $pdf->download('Activity_logs.pdf');
 
 
 }

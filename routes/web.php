@@ -18,3 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('logs', [LogsPdfController::class, 'index']);
+Route::get('/pdf', function () {
+    return view('pdf.logs');
+});
